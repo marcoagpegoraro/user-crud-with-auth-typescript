@@ -8,8 +8,8 @@ import myController from '../controllers/usersController/usersController'
 const router = Router();
   
 // Requests 
-// router.get('/', myController.get);
-// router.get('/{id}', myController.getById);
+router.get('/', myController.get);
+router.get('/:id', myController.getById);
 router.post('/', myController.post);
   
 export default router;

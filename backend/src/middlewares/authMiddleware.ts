@@ -4,7 +4,7 @@ import { RequestWithUser, User } from "../dto/RequestWithUser"
 
 export const authMiddleware = (req: RequestWithUser, res: Response, next: NextFunction) => {
 
-  const token = req.headers.authorization || req.query.token || req.cookies.token
+  const token = req.headers['authorization'] as string
 
   if (!token) {
     return res.status(401).json({ success: false, message: 'Token is missing' })
