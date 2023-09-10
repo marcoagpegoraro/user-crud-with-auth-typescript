@@ -2,7 +2,7 @@
 import { Router } from 'express'
   
 // Local Modules
-import myController from '../controllers/positionsController'
+import myController from '../controllers/positionController/positionsController'
   
 // Initialization
 const router = Router();

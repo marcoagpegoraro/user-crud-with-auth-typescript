@@ -4,6 +4,8 @@ import 'dotenv/config'
 
 // Local Modules
 import tokenRoutes from './routes/tokenRoutes';
+import usersRoutes from './routes/usersRoutes';
+import positionsRoutes from './routes/positionsRoutes';
   
 // Server Initialization
 const app = express();
@@ -13,7 +15,9 @@ const PORT = process.env.PORT;
 app.use(express.json());
   
 // Routes will be written here
-app.use('/token', tokenRoutes); 
+app.use('/api/v1/token', tokenRoutes); 
+app.use('/api/v1/users', usersRoutes); 
+app.use('/api/v1/positions', positionsRoutes); 
   
 // Server Listen Along with Database 
 // connection(in case of data persistence)
