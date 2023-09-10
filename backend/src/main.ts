@@ -1,4 +1,5 @@
 import * as express from 'express'
+import * as path from 'path'
 
 import 'dotenv/config'
 
@@ -13,14 +14,14 @@ const app = express();
 const PORT = process.env.PORT;
   
 // Middlewares
+app.use('/public', express.static(path.join(__dirname, '..', 'public')))
 app.use(express.json());
   
 // Routes will be written here
 app.use('/api/v1/token', tokenRoutes); 
 
-app.use(authMiddleware)
-app.use('/api/v1/users', usersRoutes); 
-app.use('/api/v1/positions', positionsRoutes); 
+app.use('/api/v1/users', authMiddleware, usersRoutes); 
+app.use('/api/v1/positions',authMiddleware, positionsRoutes); 
   
 // Server Listen Along with Database 
 // connection(in case of data persistence)

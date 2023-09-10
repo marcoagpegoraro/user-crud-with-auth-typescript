@@ -1,15 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import * as multer from 'multer';
+import * as path from 'path'
 
 const prisma = new PrismaClient();
 
-const upload = multer({
-  storage: multer.memoryStorage(), // Store the uploaded file in memory
-  limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB file size limit (adjust as needed)
-  },
-});
 
 // Methods to be executed on routes
 const get = async (req: Request, res: Response) => {
@@ -44,6 +39,7 @@ const getById = async (req: Request, res: Response) => {
 
 const post = (req: Request, res: Response) => {
   const body = req.body
+  console.log(req)
 
   res.send(body);
 }
