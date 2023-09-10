@@ -1,5 +1,7 @@
 import * as express from 'express'
 import * as path from 'path'
+import * as bodyParser from 'body-parser';
+import * as formidableMiddleware from 'express-formidable';
 
 import 'dotenv/config'
 
@@ -8,12 +10,17 @@ import tokenRoutes from './routes/tokenRoutes';
 import usersRoutes from './routes/usersRoutes';
 import positionsRoutes from './routes/positionsRoutes';
 import { authMiddleware } from './middlewares/authMiddleware';
-  
+
+
+
 // Server Initialization
 const app = express();
 const PORT = process.env.PORT;
   
 // Middlewares
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(formidableMiddleware());
 app.use('/public', express.static(path.join(__dirname, '..', 'public')))
 app.use(express.json());
   
