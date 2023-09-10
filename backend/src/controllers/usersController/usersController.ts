@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import * as multer from 'multer';
 import * as path from 'path'
-import { isFieldsValid } from "../../services/postUserIntoDatabaseService";
+import { validateFields, validatePhoto } from "../../services/postUserIntoDatabaseService";
 import { User } from "../../services/dto/User";
 
 const prisma = new PrismaClient();
@@ -40,11 +40,23 @@ const getById = async (req: Request, res: Response) => {
 }
 
 const post = async (req: Request, res: Response) => {
-  const body = req.body
-  // console.log(await isFieldsValid(req.fields as unknown as User))
-  // console.log(req.files)
+  const [isFieldsValid, errorMessageFields] =  await validateFields(req.fields as unknown as User)
 
-  res.send(await isFieldsValid(req.fields as unknown as User));
+  if(!isFieldsValid){
+    res.status(400).json({success: false, message: errorMessageFields})
+    return
+  }
+
+  const [isPhotoValid, errorMessagePhoto] =  await validatePhoto(req.files.photo)
+
+  if(!isPhotoValid){
+    res.status(400).json({success: false, message: errorMessagePhoto})
+    return
+  }
+
+
+ 
+  res.send("a");
 }
 
 // Export of all methods as object

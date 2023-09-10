@@ -5,7 +5,7 @@ const prisma = new PrismaClient()
 
 
 
-export async function isFieldsValid(user: User): Promise<[boolean, string]> {
+export async function validateFields(user: User): Promise<[boolean, string]> {
   if (!user || !user.name || !user.email || !user.phone || !user.position_id) {
     return [false, "One or more fields empty"]
   }
@@ -26,6 +26,8 @@ export async function isFieldsValid(user: User): Promise<[boolean, string]> {
     return [false, 'Phone number should start with the Ukraine country code +380.']
   }
 
+
+  // Validate positions
   const positions = await prisma.position.findMany()
 
   const isValidPosition = positions
@@ -34,6 +36,28 @@ export async function isFieldsValid(user: User): Promise<[boolean, string]> {
 
   if (isValidPosition) {
     return [false, 'Invalid Position ID. Please choose a valid position.']
+  }
+
+  return [true, null]
+}
+
+
+
+export async function validatePhoto(photo): Promise<[boolean, string]> {
+ 
+  console.log(photo)
+  
+  const validPhotoType = [
+    "image/jpeg",
+    "image/jpg"
+  ]
+
+  if (!validPhotoType.includes(photo.type)) {
+    return [false, `The type of the file is not valid (${photo.type}), valid types: jpeg, jpg`]
+  }
+
+  if (photo.size > 5_000_000) {
+    return [false, "Photo size cannot be bigger than 5MB"]
   }
 
   return [true, null]
