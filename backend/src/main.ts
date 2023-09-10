@@ -6,6 +6,7 @@ import 'dotenv/config'
 import tokenRoutes from './routes/tokenRoutes';
 import usersRoutes from './routes/usersRoutes';
 import positionsRoutes from './routes/positionsRoutes';
+import { authMiddleware } from './middlewares/authMiddleware';
   
 // Server Initialization
 const app = express();
@@ -16,6 +17,8 @@ app.use(express.json());
   
 // Routes will be written here
 app.use('/api/v1/token', tokenRoutes); 
+
+app.use(authMiddleware)
 app.use('/api/v1/users', usersRoutes); 
 app.use('/api/v1/positions', positionsRoutes); 
   
