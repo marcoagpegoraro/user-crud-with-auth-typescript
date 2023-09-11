@@ -9,10 +9,10 @@ export default function userDatabaseToUserResponseMapper(userDatabase: UserDatab
         email: userDatabase.email,
         name: userDatabase.name,
         phone: userDatabase.phone,
-        photo: userDatabase.phone,
+        photo: userDatabase.photo,
         position: userDatabase.position.name,
         position_id: userDatabase.position.id
     }
-    
+
     return userResponse
 }

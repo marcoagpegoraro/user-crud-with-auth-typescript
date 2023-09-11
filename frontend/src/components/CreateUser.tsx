@@ -71,7 +71,7 @@ export default function CreateUser() {
   };
   return (
     <>
-       <div style={{ padding: 16 }}>
+       <div style={{ padding: 16, maxWidth: 400 }}>
       <Paper style={{ padding: 16 }}>
         <Typography variant="h4" gutterBottom>
         User Information
