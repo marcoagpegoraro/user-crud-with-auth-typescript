@@ -1,6 +1,9 @@
 import { Request, Response } from "express"
 import { PrismaClient } from '@prisma/client'
 import { User } from "./dto/User"
+import tinify from "tinify"
+tinify.key = process.env.TINIFY
+
 const prisma = new PrismaClient()
 
 
@@ -59,4 +62,17 @@ export async function validatePhoto(photo): Promise<[boolean, string]> {
 
   return [true, null]
 }
+
+export async function uploadPhoto(photo, photoId) {  
+  const source = tinify.fromFile(photo['path']);
+
+  const resized = source.resize({
+    method: "cover",
+    width: 70,
+    height: 70
+  }).convert({type:"image/jpg"});  
+
+
+  resized.toFile("./public/images/" + photoId + ".jpg")
+ }
 

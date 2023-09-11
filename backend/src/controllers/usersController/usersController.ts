@@ -1,10 +1,8 @@
 import { PrismaClient } from "@prisma/client"
 import { Request, Response } from "express"
 import { v4 as uuidv4 } from 'uuid';
-import tinify from "tinify"
-tinify.key = process.env.TINIFY
 
-import { validateFields, validatePhoto } from "../../services/postUserIntoDatabaseService";
+import { uploadPhoto, validateFields, validatePhoto } from "../../services/postUserIntoDatabaseService";
 import { User } from "../../services/dto/User";
 
 const prisma = new PrismaClient();
@@ -42,37 +40,46 @@ const getById = async (req: Request, res: Response) => {
 }
 
 const post = async (req: Request, res: Response) => {
-  const [isFieldsValid, errorMessageFields] =  await validateFields(req.fields as unknown as User)
+  const [isFieldsValid, errorMessageFields] = await validateFields(req.fields as unknown as User)
 
-  if(!isFieldsValid){
-    res.status(400).json({success: false, message: errorMessageFields})
+  if (!isFieldsValid) {
+    res.status(400).json({ success: false, message: errorMessageFields })
     return
   }
 
   const photo = req.files.photo
 
-  const [isPhotoValid, errorMessagePhoto] =  await validatePhoto(photo)
+  const [isPhotoValid, errorMessagePhoto] = await validatePhoto(photo)
 
-  if(!isPhotoValid){
-    res.status(400).json({success: false, message: errorMessagePhoto})
+  if (!isPhotoValid) {
+    res.status(400).json({ success: false, message: errorMessagePhoto })
     return
   }
 
-  const source = tinify.fromFile(photo['path']);
-
-  const resized = source.resize({
-    method: "cover",
-    width: 70,
-    height: 70
-  }).convert({type:"image/jpg"});  
-
   const photoId = uuidv4()
+  uploadPhoto(photo, photoId)
 
-  resized.toFile("./public/images/" + photoId + ".jpg")
- 
+  const serverUrl = `${req.protocol}://${req.get('host')}`;
+
+  const user = {
+    ...req['fields'],
+    photo: `${serverUrl}/public/images/${photoId}.jpg`,
+    position_id: parseInt(req.fields.position_id as unknown as string)
+  }
 
 
-  res.send("a");
+  const userCreated = await prisma.user.create({
+    data: {
+      name: `${req.fields.name}`,
+      email: `${req.fields.email}`,
+      phone: `${req.fields.phone}`,
+      photo: `${serverUrl}/public/images/${photoId}.jpg`,
+      position_id: parseInt(`${req.fields.position_id}`)
+    },
+  });
+
+
+  res.status(201).json({ success: true, message: 'user created sucessfuly: ' + userCreated.name });
 }
 
 // Export of all methods as object
