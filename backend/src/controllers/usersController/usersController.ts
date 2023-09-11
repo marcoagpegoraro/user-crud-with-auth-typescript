@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { uploadPhoto, validateFields, validatePhoto } from "../../services/postUserIntoDatabaseService";
 import { User } from "../../services/dto/User";
+import userDatabaseToUserResponseMapper from "./mapper/UserDatabaseToUserResponseMapper";
 
 const prisma = new PrismaClient();
 
@@ -11,9 +12,15 @@ const prisma = new PrismaClient();
 // Methods to be executed on routes
 const get = async (req: Request, res: Response) => {
   try {
-    const users = await prisma.user.findMany();
+    const users = await prisma.user.findMany({
+      include: {
+        position: true
+      }
+    });
 
-    res.json(users);
+    const usersReponse = users.map(user => userDatabaseToUserResponseMapper(user))
+
+    res.json(usersReponse);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
@@ -26,13 +33,16 @@ const getById = async (req: Request, res: Response) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
+      include: {
+        position: true
+      }
     });
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    res.json(user);
+    res.json(userDatabaseToUserResponseMapper(user));
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });

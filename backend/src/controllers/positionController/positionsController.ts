@@ -5,7 +5,6 @@ const prisma = new PrismaClient()
 
 // Methods to be executed on routes
 const get = async (req: Request, res: Response)=>{
-    
     const positions = await prisma.position.findMany()
 
     res.send(positions);
