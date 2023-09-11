@@ -1,7 +1,9 @@
-import { PrismaClient } from "@prisma/client";
-import { Request, Response } from "express";
-import * as multer from 'multer';
-import * as path from 'path'
+import { PrismaClient } from "@prisma/client"
+import { Request, Response } from "express"
+import { v4 as uuidv4 } from 'uuid';
+import tinify from "tinify"
+tinify.key = process.env.TINIFY
+
 import { validateFields, validatePhoto } from "../../services/postUserIntoDatabaseService";
 import { User } from "../../services/dto/User";
 
@@ -47,15 +49,29 @@ const post = async (req: Request, res: Response) => {
     return
   }
 
-  const [isPhotoValid, errorMessagePhoto] =  await validatePhoto(req.files.photo)
+  const photo = req.files.photo
+
+  const [isPhotoValid, errorMessagePhoto] =  await validatePhoto(photo)
 
   if(!isPhotoValid){
     res.status(400).json({success: false, message: errorMessagePhoto})
     return
   }
 
+  const source = tinify.fromFile(photo['path']);
 
+  const resized = source.resize({
+    method: "cover",
+    width: 70,
+    height: 70
+  }).convert({type:"image/jpg"});  
+
+  const photoId = uuidv4()
+
+  resized.toFile("./public/images/" + photoId + ".jpg")
  
+
+
   res.send("a");
 }
 

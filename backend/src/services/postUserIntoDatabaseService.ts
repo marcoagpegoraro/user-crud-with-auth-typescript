@@ -43,10 +43,7 @@ export async function validateFields(user: User): Promise<[boolean, string]> {
 
 
 
-export async function validatePhoto(photo): Promise<[boolean, string]> {
- 
-  console.log(photo)
-  
+export async function validatePhoto(photo): Promise<[boolean, string]> {  
   const validPhotoType = [
     "image/jpeg",
     "image/jpg"
