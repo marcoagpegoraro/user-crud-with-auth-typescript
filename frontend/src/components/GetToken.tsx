@@ -1,6 +1,8 @@
-import { Button } from "@mui/material";
+import { Button, Card, Typography } from "@mui/material";
+import { useState } from "react";
 
 export default function GetToken() {
+  const [token, setToken] = useState(localStorage.getItem("token"))
 
   const handleGetToken = async () => {
     const response = await fetch('http://localhost:3000/api/v1/token', {
@@ -8,13 +10,19 @@ export default function GetToken() {
     });
 
     const body = await response.json()
-    localStorage.setItem("token","Bearer " + body.token);
+    const token = "Bearer " + body.token
+    localStorage.setItem("token", token);
+    setToken(token)
   }
 
   return <>
     <Button type="submit" variant="contained" color="primary" onClick={handleGetToken}>
       Get token and save in localstorage
     </Button>
-  </>
 
+    <Typography>
+      Token used:
+      {token}
+    </Typography>
+  </>
 }

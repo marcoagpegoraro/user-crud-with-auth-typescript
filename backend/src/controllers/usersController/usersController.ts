@@ -61,25 +61,26 @@ const post = async (req: Request, res: Response) => {
 
   const serverUrl = `${req.protocol}://${req.get('host')}`;
 
-  const user = {
-    ...req['fields'],
-    photo: `${serverUrl}/public/images/${photoId}.jpg`,
-    position_id: parseInt(req.fields.position_id as unknown as string)
+  let userCreated
+
+  try {
+
+    userCreated = await prisma.user.create({
+      data: {
+        name: `${req.fields.name}`,
+        email: `${req.fields.email}`,
+        phone: `${req.fields.phone}`,
+        photo: `${serverUrl}/public/images/${photoId}.jpg`,
+        position_id: parseInt(`${req.fields.position_id}`)
+      },
+    });
+  }
+  catch (e) {
+    res.status(400).json({ success: false, message: 'User already exist: ' + req.fields.email });
+    return
   }
 
-
-  const userCreated = await prisma.user.create({
-    data: {
-      name: `${req.fields.name}`,
-      email: `${req.fields.email}`,
-      phone: `${req.fields.phone}`,
-      photo: `${serverUrl}/public/images/${photoId}.jpg`,
-      position_id: parseInt(`${req.fields.position_id}`)
-    },
-  });
-
-
-  res.status(201).json({ success: true, message: 'user created sucessfuly: ' + userCreated.name });
+  res.status(201).json({ success: true, message: 'user created successfully: ' + req.fields.name });
 }
 
 // Export of all methods as object

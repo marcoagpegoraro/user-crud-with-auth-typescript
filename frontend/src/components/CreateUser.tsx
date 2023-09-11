@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Button, TextField, Grid, Paper, Typography } from '@mui/material';
 import { Store } from 'react-notifications-component'
+import showNotification from '../utils/Notification';
 
 export default function CreateUser() {
   const [formData, setFormData] = useState({
@@ -28,6 +29,14 @@ export default function CreateUser() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const token = localStorage.getItem("token")
+
+    if(!token){
+        showNotification("Warning", "Token not found, please get another token", "warning")
+        return
+    }
+
     const formDataToSend = new FormData();
     formDataToSend.append('name', formData.name);
     formDataToSend.append('email', formData.email);
@@ -35,37 +44,22 @@ export default function CreateUser() {
     formDataToSend.append('phone', formData.phone);
     formDataToSend.append('photo', formData.photo);
 
+
     const response = await fetch('http://localhost:3000/api/v1/users', {
       method: 'POST',
       body: formDataToSend,
+      headers: {authorization: token}
     });
 
-    console.log(response)
+    const responseBody = await response.json()
 
-    if (!response.ok) {
-      Store.addNotification({
-        title: "Success",
-        message: "Error sending the user",
-        type: "success",
-        container: "top-right",
-        dismiss: {
-          duration: 3000,
-          onScreen: true
-        }
-      });      
-    }
-    else{
-      Store.addNotification({
-        title: "Error",
-        message: "User inserted into the database",
-        type: "danger",
-        container: "top-right",
-        dismiss: {
-          duration: 5000,
-          onScreen: true
-        }
-      });
-    }
+    console.log()
+
+    if (response.ok) 
+        showNotification("Success", "User inserted into the database: "+ responseBody.message, "success")
+    else
+        showNotification("Error", "Error sending the user: " + responseBody.message, "danger")
+    
 
     // setFormData({
     //   name: '',
