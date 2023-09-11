@@ -20,7 +20,7 @@ const get = async (req: Request, res: Response) => {
 
     const usersReponse = users.map(user => userDatabaseToUserResponseMapper(user))
 
-    res.json(usersReponse);
+    res.json({success: true, users: usersReponse});
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
@@ -42,7 +42,7 @@ const getById = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    res.json(userDatabaseToUserResponseMapper(user));
+    res.json({success: true, user: userDatabaseToUserResponseMapper(user)});
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });

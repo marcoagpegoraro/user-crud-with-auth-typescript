@@ -72,10 +72,10 @@ export default function CreateUser() {
   return (
     <>
        <div style={{ padding: 16 }}>
-      <Typography variant="h4" gutterBottom>
-        User Information
-      </Typography>
       <Paper style={{ padding: 16 }}>
+        <Typography variant="h4" gutterBottom>
+        User Information
+        </Typography>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3}>
             <Grid item xs={12}>
