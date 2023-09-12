@@ -16,13 +16,15 @@ export default function GetToken() {
   }
 
   return <>
-    <Button type="submit" variant="contained" color="primary" onClick={handleGetToken}>
-      Get token and save in localstorage
-    </Button>
+    <Card style={{ padding: 16, margin: 16 }}>
+      <Button type="submit" variant="contained" color="primary" onClick={handleGetToken}>
+        Get token and save in localstorage
+      </Button>
 
-    <Typography>
-      Token used:
-      {token}
-    </Typography>
+      <Typography>
+        Token used:
+        {token}
+      </Typography>
+    </Card>
   </>
 }

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Paper } from '@mui/material';
 import showNotification from '../utils/Notification';
+import getUsersService from '../services/getUsersService';
 
 
-export default function ListUser() {
-  const [users, setUsers] = useState([]);
+export default function ListUser({users, setUsers}) {
   useEffect(() => {
 
     const fetchData = async () => {
@@ -15,18 +15,9 @@ export default function ListUser() {
           return
       }
 
-      const response = await fetch('http://localhost:3000/api/v1/users',{
-        method: 'GET',
-        headers: {authorization: token}
-      })
-      const body = await response.json()
-      
-      if(!body.success){
-        showNotification("Warning", "Invalid token, please get another token", "warning")
-        return 
-      }
-      
-      setUsers(body.users)
+      const users = await getUsersService(token)
+
+      setUsers(users)
     }
 
     fetchData()

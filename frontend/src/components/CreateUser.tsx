@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { Button, TextField, Grid, Paper, Typography } from '@mui/material';
 import { Store } from 'react-notifications-component'
 import showNotification from '../utils/Notification';
+import getUsersService from '../services/getUsersService';
 
-export default function CreateUser() {
+export default function CreateUser({setUsers}) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -57,17 +58,22 @@ export default function CreateUser() {
 
     if (response.ok) 
         showNotification("Success", "User inserted into the database: "+ responseBody.message, "success")
-    else
+    else {        
         showNotification("Error", "Error sending the user: " + responseBody.message, "danger")
-    
+        return
+    }
 
-    // setFormData({
-    //   name: '',
-    //   email: '',
-    //   position_id: '',
-    //   phone: '',
-    //   photo: null,
-    // });
+    const users = await getUsersService(token)
+
+    setUsers(users)
+
+    setFormData({
+      name: '',
+      email: '',
+      position_id: '',
+      phone: '',
+      photo: null,
+    });
   };
   return (
     <>
