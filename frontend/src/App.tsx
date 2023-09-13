@@ -12,9 +12,7 @@ function App() {
     <ReactNotifications />
     <GetToken/>
     <div className='content'>
-      <CreateUser 
-        setUsers={setUsers}
-      />
+      <CreateUser />
       <ListUser 
         users={users}
         setUsers={setUsers}

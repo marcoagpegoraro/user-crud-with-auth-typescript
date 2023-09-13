@@ -1,10 +1,9 @@
 import { useState } from 'react'
 import { Button, TextField, Grid, Paper, Typography } from '@mui/material';
-import { Store } from 'react-notifications-component'
 import showNotification from '../utils/Notification';
 import getUsersService from '../services/getUsersService';
 
-export default function CreateUser({setUsers}) {
+export default function CreateUser() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -63,9 +62,6 @@ export default function CreateUser({setUsers}) {
         return
     }
 
-    const users = await getUsersService(token)
-
-    setUsers(users)
 
     setFormData({
       name: '',

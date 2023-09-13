@@ -1,30 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Paper } from '@mui/material';
+import { Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Paper, Button } from '@mui/material';
 import showNotification from '../utils/Notification';
 import getUsersService from '../services/getUsersService';
 
 
 export default function ListUser({users, setUsers}) {
-  useEffect(() => {
 
-    const fetchData = async () => {
-      const token = localStorage.getItem("token")
+  const [page, setPage] = useState(0)
 
-      if(!token){
-          showNotification("Warning", "Token not found, please get another token", "warning")
-          return
-      }
+  const getUsers = async () => {
+    const token = localStorage.getItem("token")
 
-      const users = await getUsersService(token)
-
-      setUsers(users)
+    if(!token){
+        showNotification("Warning", "Token not found, please get another token", "warning")
+        return
     }
 
-    fetchData()
-      .catch(console.error);
-  }, []);
+    const newUsers = await getUsersService(token, page)
+
+    setUsers([...newUsers, ...users])
+    setPage((prev) => prev + 1)
+  }
+
   return <>
-    <TableContainer component={Paper}>
+    <TableContainer style={{margin: 16}} component={Paper}>
+      <Button sx={{m: 1}} variant='contained' onClick={getUsers}>Get users (six by six)</Button>
       <Table>
         <TableHead>
           <TableRow>

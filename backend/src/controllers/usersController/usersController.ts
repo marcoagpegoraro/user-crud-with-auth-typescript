@@ -11,11 +11,17 @@ const prisma = new PrismaClient();
 
 // Methods to be executed on routes
 const get = async (req: Request, res: Response) => {
+  
+  const take = 6
+  const skip = req.query.page == null ? 0 : parseInt(req.query.page as string) * 6
+
   try {
     const users = await prisma.user.findMany({
       include: {
         position: true
-      }
+      },
+      skip: skip,
+      take: take,
     });
 
     const usersReponse = users.map(user => userDatabaseToUserResponseMapper(user))
