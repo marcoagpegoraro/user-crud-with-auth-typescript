@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "dev": "nodemon",
-    "start": "npx ts-node ./src/main.ts",
+    "local": "npx ts-node ./src/main.ts",
+    "start": "npm install && npx ts-node ./src/main.ts",
     "test": "jest"
   },
   "repository": {
