@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { uploadPhoto, validateFields, validatePhoto } from "../../services/postUserIntoDatabaseService";
 import { User } from "../../services/dto/User";
-import userDatabaseToUserResponseMapper from "./mapper/UserDatabaseToUserResponseMapper";
+import userDatabaseToUserResponseMapper from "./mapper/userDatabaseToUserResponse";
 
 const prisma = new PrismaClient();
 
@@ -33,7 +33,7 @@ const get = async (req: Request, res: Response) => {
   }
 }
 
-const getById = async (req: Request, res: Response) => {
+const getById = async (req: any, res: Response) => {
   const userId = parseInt(req.params.id);
 
   try {
